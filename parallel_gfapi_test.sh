@@ -29,7 +29,8 @@ NOTOK=1
 
 # all of these variables have defaults
 filesize_kb=${PGFAPI_FILESIZE:-4}
-processes=${PGFAPI_PROCESSES:-4}
+
+processes=${PGFAPI_PROCESSES:-1}
 files=${PGFAPI_FILES:-10240}
 recordsize_kb=${PGFAPI_RECORDSIZE:-64}
 clientFile=${PGFAPI_CLIENTS:-clients.list}
@@ -43,7 +44,8 @@ export GFAPI_FSYNC_AT_CLOSE=${PGFAPI_FSYNC_AT_CLOSE:-0}
 export GFAPI_RDPCT=${PGFAPI_RDPCT:-0}
 export GFAPI_THREADS_PER_PROC=${PGFAPI_THREADS_PER_PROC:-1}
 export GFAPI_DIRECT=${PGFAPI_DIRECT:-0}
-PROGRAM=${PGFAPI_PROGRAM:-gfapi_perf_test}
+PROGRAM=${PGFAPI_PROGRAM:-$PWD/gfapi_perf_test}
+echo $PROGRAM
 # GFAPI_IOREQ only used for random I/O tests
 export GFAPI_IOREQ=4096
 MOUNTPOINT=${PGFAPI_MOUNTPOINT:-/mnt/gfapi}
@@ -122,8 +124,11 @@ pace() {
   ( echo "import time" ; echo "time.sleep($1)" ) | python
 }
 
-# create empty directory tree
-
+# create empty directory tree/
+#Jingle Wang add
+mkdir -p $MOUNTPOINT
+mount -t glusterfs $GFAPI_HOSTNAME:$GFAPI_VOLNAME $MOUNTPOINT
+#done
 mkdir -p $MOUNTPOINT/$TOPDIR
 find $MOUNTPOINT/$TOPDIR -maxdepth 1 -name '*.ready' -delete
 rm -f $MOUNTPOINT/$TOPDIR/$GFAPI_STARTING_GUN

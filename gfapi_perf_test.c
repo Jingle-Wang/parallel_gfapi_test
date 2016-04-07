@@ -345,8 +345,10 @@ void * gfapi_thread_run( void * void_result_p )
       }
     } else {
       ready_fd_p = glfs_creat(glfs_p, ready_path, sg_create_flags, 0644);
+      printf("Jingle Wang %s\n", ready_path);
       if (!ready_fd_p) scallerr(ready_path);
       else {
+	printf("Jingle Wang2\n");
         rc = glfs_close(ready_fd_p);
         if (rc < OK) scallerr("ready path close");
       }
@@ -714,6 +716,7 @@ int main(int argc, char * argv[])
   FOREACH(t, prm.threads_per_proc) {
     gfapi_result_t * next_result_p = &result_array[t];
     next_result_p->thread_num = t;
+    printf("hello\n");
     rc = pthread_create(&next_result_p->thr, NULL, gfapi_thread_run, next_result_p);
     if (rc != OK) scallerr("pthread_create");
   }
